@@ -1,6 +1,6 @@
 const verifyToken = (req, res, next) => {
     if(req.method === 'OPTIONS') {
-      return next(); //this is so we can skip verify if preflight
+      return next(); 
     }
   
     const authHeader = req.headers['authorization'];

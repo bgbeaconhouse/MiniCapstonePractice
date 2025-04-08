@@ -60,7 +60,7 @@ router.get("/", async (req, res, next) => {
   });
 
   // Add a new department
-  router.post("/", async (req, res, next) => {
+  router.post("/", verifyToken, async (req, res, next) => {
     console.log("Inside the route")
     try {
     
@@ -88,7 +88,7 @@ router.get("/", async (req, res, next) => {
   
 
   // Update department
-  router.put("/:id", async (req, res, next) => {
+  router.put("/:id", verifyToken, async (req, res, next) => {
     try {
       const id = +req.params.id;
   
@@ -124,7 +124,7 @@ router.get("/", async (req, res, next) => {
 
 
   // Delete department
-  router.delete("/:id", async (req, res, next) => {
+  router.delete("/:id", verifyToken, async (req, res, next) => {
     
     try {
       const id = +req.params.id;
@@ -148,7 +148,7 @@ router.get("/", async (req, res, next) => {
   
 
   // Create new professor for specified department
-  router.post("/:id/professors", async (req, res, next) => {
+  router.post("/:id/professors", verifyToken, async (req, res, next) => {
     try {
       const departmentId = +req.params.id;
   
@@ -181,7 +181,7 @@ router.get("/", async (req, res, next) => {
   });
 
 // Remove a professor from a department
-router.put("/:departmentId/remove-professor/:professorId", async (req, res, next) => {
+router.put("/:departmentId/remove-professor/:professorId", verifyToken, async (req, res, next) => {
   try {
     const departmentId = +req.params.departmentId;
     const professorId = +req.params.professorId;

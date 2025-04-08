@@ -62,7 +62,7 @@ router.get("/:id/department", async (req, res, next) => {
 })
  
 // Add new professor
-  router.post("/", async (req, res, next) => {
+  router.post("/", verifyToken, async (req, res, next) => {
     console.log("Inside the route")
     try {
     
@@ -90,7 +90,7 @@ router.get("/:id/department", async (req, res, next) => {
 
 
 // Update existing professor
-  router.put("/:id", async (req, res, next) => {
+  router.put("/:id", verifyToken, async (req, res, next) => {
     try {
       const id = +req.params.id;
   
@@ -124,7 +124,7 @@ router.get("/:id/department", async (req, res, next) => {
   });
 
 //   Delete specified professor
-  router.delete("/:id", async (req, res, next) => {
+  router.delete("/:id", verifyToken, async (req, res, next) => {
     try {
       const id = +req.params.id;
   
@@ -146,7 +146,7 @@ router.get("/:id/department", async (req, res, next) => {
 
 // change department an existing professor belongs to
 
-router.put("/:professorId/change-department/:newDepartmentId", async (req, res, next) => {
+router.put("/:professorId/change-department/:newDepartmentId", verifyToken, async (req, res, next) => {
     try {
       const professorId = +req.params.professorId;
       const newDepartmentId = +req.params.newDepartmentId;
