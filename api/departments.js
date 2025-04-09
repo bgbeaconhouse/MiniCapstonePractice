@@ -65,6 +65,8 @@ router.get("/", async (req, res, next) => {
     try {
     
       const { name, email } = req.body;
+      console.log(req.body);
+      
   
       
       if (!name) {
@@ -79,6 +81,7 @@ router.get("/", async (req, res, next) => {
       }
       console.log("before prisma")
       const department = await prisma.department.create({ data: { name, email } });
+      console.log("after create:")
       res.status(201).json(department);
     } catch {
       next();
