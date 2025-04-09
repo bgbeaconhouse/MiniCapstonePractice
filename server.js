@@ -10,6 +10,10 @@ const PORT = 3000;
 
 app.use(express.json());
 app.use(require("morgan")("dev"));
+const cors = require("cors");
+app.use(cors({ origin: /localhost/ }));
+
+
 
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt');
