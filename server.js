@@ -17,7 +17,7 @@ app.use(cors({ origin: /localhost/ }));
 
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt');
-
+const verifyToken = require("./verify")
 
 
 app.post("/api/register", async (req, res, next) => {
@@ -43,6 +43,26 @@ app.post("/api/login", async (req, res, next) => {
 
   res.status(201).json(token)
 })
+
+app.get("/api/account", verifyToken, async (req, res, next) => {
+  try {
+    const userId = req.userId; 
+
+    const user = await prisma.administrator.findUnique({
+      where: { id: userId },
+      select: { id: true, username: true } 
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: 'Account not found' });
+    }
+
+    res.status(200).json(user);
+  } catch (error) {
+    console.error("Error fetching account details:", error);
+    next(error);
+  }
+});
 
 
 app.use("/api", require("./api"));
