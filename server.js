@@ -11,7 +11,7 @@ const PORT = 3000;
 app.use(express.json());
 app.use(require("morgan")("dev"));
 const cors = require("cors");
-app.use(cors({ origin: /localhost/ }));
+app.use(cors({ origin: ["http://localhost:5173"] }));
 
 
 
