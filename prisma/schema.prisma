@@ -36,4 +36,5 @@ model Administrator {
   id Int @id @default(autoincrement())
   username String @unique
   password String 
+  is_admin Boolean
 }
