@@ -90,10 +90,11 @@ router.get("/:id/department", async (req, res, next) => {
 
 // Update existing professor
 
-router.put("/:id", async (req, res, next) => {
+router.put("/:id", verifyToken, async (req, res, next) => {
   try {
     const id = +req.params.id;
 
+    
     const professorExists = await prisma.professor.findUnique({ where: { id } });
     if (!professorExists) {
       return next({
@@ -102,9 +103,8 @@ router.put("/:id", async (req, res, next) => {
       });
     }
 
-    const { name, email, bio, image, department, newDepartmentId } = req.body;
-
-  
+    
+    const { name, email, bio, image } = req.body;
     if (!name) {
       return next({
         status: 400,
@@ -112,30 +112,14 @@ router.put("/:id", async (req, res, next) => {
       });
     }
 
-    const dataToUpdate = { name, email, bio, image, department };
-
-   
-    if (newDepartmentId) {
-      const departmentExists = await prisma.department.findUnique({
-        where: { id: +newDepartmentId },
-      });
-      if (!departmentExists) {
-        return next({
-          status: 400,
-          message: `Could not find department with id ${newDepartmentId}.`,
-        });
-      }
-      dataToUpdate.departmentId = +newDepartmentId;
-    }
-
-    const updatedProfessor = await prisma.professor.update({
+    const professor = await prisma.professor.update({
       where: { id },
-      data: dataToUpdate,
+      data: { name, email, bio, image },
     });
 
-    res.json(updatedProfessor);
-  } catch (error) {
-    next(error);
+    res.json(professor);
+  } catch {
+    next();
   }
 });
 
@@ -160,6 +144,49 @@ router.put("/:id", async (req, res, next) => {
       next();
     }
   });
+
+  // change department an existing professor belongs to
+
+router.put("/:professorId/change-department/:newDepartmentId", verifyToken, async (req, res, next) => {
+  try {
+    const professorId = +req.params.professorId;
+    const newDepartmentId = +req.params.newDepartmentId;
+
+    
+    const professorExists = await prisma.professor.findUnique({
+      where: { id: professorId },
+    });
+    if (!professorExists) {
+      return next({
+        status: 404,
+        message: `Could not find professor with id ${professorId}.`,
+      });
+    }
+
+    
+    const departmentExists = await prisma.department.findUnique({
+      where: { id: newDepartmentId },
+    });
+    if (!departmentExists) {
+      return next({
+        status: 404,
+        message: `Could not find department with id ${newDepartmentId}.`,
+      });
+    }
+
+    
+    const updatedProfessor = await prisma.professor.update({
+      where: { id: professorId },
+      data: {
+        departmentId: newDepartmentId,
+      },
+    });
+
+    res.json(updatedProfessor);
+  } catch (error) {
+    next(error);
+  }
+});
 
   
 module.exports = router;
