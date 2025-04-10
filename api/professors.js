@@ -66,7 +66,7 @@ router.get("/:id/department", async (req, res, next) => {
     console.log("Inside the route")
     try {
     
-      const { name, email, description, image } = req.body;
+      const { name,  email, image, bio, departmentId } = req.body;
   
       
       if (!name) {
@@ -80,7 +80,18 @@ router.get("/:id/department", async (req, res, next) => {
         return next(error);
       }
       console.log("before prisma")
-      const professor = await prisma.professor.create({ data: { name, email, description, image } });
+      const professor = await prisma.professor.create({
+         data: { name, email, image, bio, departmentId,
+
+          },
+        include: {
+          department: {
+            select: {
+              name: true,
+            }
+          }
+        }
+        });
       res.status(201).json(professor);
     } catch {
       next();
@@ -104,7 +115,7 @@ router.put("/:id", verifyToken, async (req, res, next) => {
     }
 
     
-    const { name, email, bio, image } = req.body;
+    const { name, email, bio, image, departmentId } = req.body;
     if (!name) {
       return next({
         status: 400,
@@ -114,7 +125,7 @@ router.put("/:id", verifyToken, async (req, res, next) => {
 
     const professor = await prisma.professor.update({
       where: { id },
-      data: { name, email, bio, image },
+      data: { name, email, bio, image, departmentId },
     });
 
     res.json(professor);

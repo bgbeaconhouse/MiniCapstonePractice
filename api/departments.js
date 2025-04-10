@@ -80,7 +80,7 @@ router.get("/", async (req, res, next) => {
         return next(error);
       }
       console.log("before prisma")
-      const department = await prisma.department.create({ data: { name, email } });
+      const department = await prisma.department.create({ data: { name, email, description, image } });
       console.log("after create:")
       res.status(201).json(department);
     } catch {
@@ -164,7 +164,7 @@ router.get("/", async (req, res, next) => {
         });
       }
   
-      const { name, email, } = req.body;
+      const { name, email, image, bio } = req.body;
       if (!name) {
         return next({
           status: 400,
@@ -173,7 +173,7 @@ router.get("/", async (req, res, next) => {
       }
   
       const professor = await prisma.professor.create({
-        data: { name, email, department: { connect: { id: departmentId || undefined} } },
+        data: { name, email, department: { connect: { id: departmentId || undefined} }, image, bio },
       });
   
       res.json(professor);
