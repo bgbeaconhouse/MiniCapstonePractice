@@ -10,7 +10,16 @@ const verifyToken = require("../verify")
 // Get all professors
 router.get("/", async (req, res, next) => {
     try {
-      const professors = await prisma.professor.findMany();
+      const professors = await prisma.professor.findMany({
+        include: { 
+          department: {
+            select: {
+              name: true,
+              id: true,
+            },
+          },
+        },
+      });
       res.json(professors);
     } catch {
       next();
@@ -88,6 +97,7 @@ router.get("/:id/department", async (req, res, next) => {
           department: {
             select: {
               name: true,
+              id: true,
             }
           }
         }
@@ -126,6 +136,14 @@ router.put("/:id", verifyToken, async (req, res, next) => {
     const professor = await prisma.professor.update({
       where: { id },
       data: { name, email, bio, image, departmentId },
+      include: { 
+        department: {
+          select: {
+            name: true,
+            id: true,
+          },
+        },
+      },
     });
 
     res.json(professor);
