@@ -64,7 +64,7 @@ router.get("/", async (req, res, next) => {
     console.log("Inside the route")
     try {
     
-      const { name, email } = req.body;
+      const { name, email, description, image } = req.body;
       console.log(req.body);
       
   
