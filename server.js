@@ -11,7 +11,7 @@ const PORT = 3000;
 app.use(express.json());
 app.use(require("morgan")("dev"));
 const cors = require("cors");
-app.use(cors({ origin: /localhost/ }));
+app.use(cors({ origin: ["http://localhost:5173"] }));
 
 
 
@@ -36,6 +36,8 @@ app.post("/api/login", async (req, res, next) => {
     where: {username}
   })
   if (!user) return res.status(400).json("User not found.")
+    console.log(user);
+    
   const passwordMatch = await bcrypt.compare(password, user.password)
 
   if (!passwordMatch) return res.status(401).json("Account not found")
