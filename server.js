@@ -12,7 +12,8 @@ app.use(express.json());
 app.use(require("morgan")("dev"));
 const cors = require("cors");
 app.use(cors({ origin: ["http://localhost:5173"] }));
-
+const chatRoutes = require('./api/chat');
+app.use('/api/chat', chatRoutes);
 
 
 const jwt = require('jsonwebtoken')
