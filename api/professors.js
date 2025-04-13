@@ -103,8 +103,9 @@ router.get("/:id/department", async (req, res, next) => {
         }
         });
       res.status(201).json(professor);
-    } catch {
-      next();
+    } catch(err) {
+      console.error("Error in POST /api/professors:", err);
+      next(err);
     }
   });
 
